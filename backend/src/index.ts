@@ -1,12 +1,14 @@
-import express, { Request, Response } from "express";
+import mongoose from "mongoose";
+import env from "./utils/validateEnv";
+import app from "./app";
 
-const app = express();
-const port = process.env.PORT || 5000;
+const port = env.PORT || 5000;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, TypeScript Express!");
-});
-
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+mongoose
+  .connect(env.MONGODB_CONNECT_STRING)
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server running at http://localhost:${port}`);
+    });
+  })
+  .catch(console.error);
